@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/idea', 'CitizensController@index');
+
+Route::post('/new-user', 'CitizensController@create');
+
+Route::get('/terrs', 'TerritoriesController@index');
