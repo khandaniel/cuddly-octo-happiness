@@ -15,8 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/idea', 'CitizensController@index');
+Route::get('/idea', 'TerritoriesController@index');
 
 Route::post('/new-user', 'CitizensController@create');
 
 Route::get('/terrs', 'TerritoriesController@index');
+
+Route::get(
+    '/ajax/select/{type}/{region_id}/{ter_pid?}',
+    'TerritoriesController@nextSelect'
+);
