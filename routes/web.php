@@ -25,3 +25,5 @@ Route::get(
     '/ajax/select/{type}/{region_id}/{ter_pid?}',
     'TerritoriesController@nextSelect'
 );
+
+Route::get('/ajax/user/{email}', 'CitizensController@checkEmail');

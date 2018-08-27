@@ -39,8 +39,6 @@ class TerritoriesController extends Controller
         }
         return view('select', [
             'territories' => $territories,
-            'name' => $type,
-            'id' => $type,
         ]);
     }
 }

@@ -8,6 +8,7 @@
         .hidden {
             display: none;
         }
+
         .visually-hidden {
             opacity: 0;
             position: fixed;
@@ -22,6 +23,7 @@
     <input type="email" name="email" id="email" value="Email@Mail.com" required/>
     @if(isset($territories))
         <select name="region" id="region" required/>
+        <option value="">-- Select value --</option>
         @foreach($territories as $territory)
             <option value="{{ $territory->reg_id }}">{{ $territory->ter_name }}</option>
             @endforeach
@@ -31,6 +33,7 @@
             @endif
             <input type="submit" value="Go on"/>
 </form>
+<table id="user-card"></table>
 <script>
     $("select#region").chosen();
     $("form").on('submit', function (event) {
@@ -38,22 +41,43 @@
         var $email = $("#email");
         var $region = $("#region");
         var $city = $("#city");
-        var area = $("#area");
-        var areaHtml = '';
+        var $area = $("#area");
         if ($name.val() !== '' && $email.val() !== '') {
             if ($city.val() === null || $city.val() === undefined) {
                 event.preventDefault();
                 $("#city").load("/ajax/select/city/" + $region.val(), function () {
                     $("#city").chosen();
                 });
-            } else if (area.val() === null || area.val() === undefined) {
+            } else if ($area.val() === null || $area.val() === undefined) {
                 event.preventDefault();
                 $("#area").load("/ajax/select/area/" + $region.val() + "/" + $city.val(), function () {
                     $("#area").chosen();
                 });
             } else {
                 event.preventDefault();
-                alert("Final validation && try email && Form sends ");
+                // Validation
+
+                // Try email
+                $("#user-card").load("/ajax/user/" + $email.val(), function (response, status, xhr) {
+                    if (status !== 'error') {
+                        alert('User already exists');
+                        return;
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/new-user",
+                    data: {
+                        "_token": $("input[name='_token']").val(),
+                        "name": $name.val(),
+                        "email": $email.val(),
+                        "region": $region.val(),
+                        "city": $city.val(),
+                        "area": $area.val()
+                    }
+                }).done(function () {
+
+                });
             }
         } else {
             event.preventDefault();
