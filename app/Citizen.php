@@ -11,7 +11,7 @@ class Citizen extends Model
         $new_citizen = new Citizen();
         $new_citizen->name = $citizen['name'];
         $new_citizen->email = $citizen['email'];
-        $new_citizen->region_ter_id = $citizen['region'];
+        $new_citizen->reg_id = $citizen['region'];
         $new_citizen->city_ter_id = $citizen['city'];
         $new_citizen->area_ter_id = $citizen['area'];
         return $new_citizen->save();
@@ -25,8 +25,8 @@ class Citizen extends Model
 
     public function region()
     {
-//        return var_dump($this->hasOne('App\Territory', 'ter_id','region_ter_id'));
-        return Territory::where('ter_id', $this->region_ter_id)->first();
+//        return var_dump($this->hasOne('App\Territory', 'ter_id','reg_id'));
+        return Territory::where(['reg_id' => $this->reg_id, 'ter_type_id' => 0])->first();
     }
 
     public function city()

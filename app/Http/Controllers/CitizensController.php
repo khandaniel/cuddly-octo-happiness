@@ -22,8 +22,9 @@ class CitizensController extends Controller
     public function checkEmail($email)
     {
         $citizen = Citizen::getByEmail($email);
-        return view('user-card', [
+        return ($citizen) ? view('user-card', [
             'citizen' => $citizen,
-        ]);
+        ]) :
+            null;
     }
 }

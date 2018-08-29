@@ -33,7 +33,7 @@ class Territory extends Model
         return self::where([
             'reg_id' => $region_id,
             'ter_pid' => $ter_pid,
-            'ter_type_id' => 3,
+            ['ter_type_id', '>=', 3],
         ])->get();
     }
 

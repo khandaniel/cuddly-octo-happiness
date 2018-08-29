@@ -35,52 +35,50 @@
 </form>
 <table id="user-card"></table>
 <script>
+    function load_territory(element, url) {
+        $(element).load(url, function () {
+            $(element).trigger("chosen:updated");
+            $(element).chosen();
+        });
+    }
+
     $("select#region").chosen();
+    $("#region").on('change', function () {
+        load_territory("#city", "/ajax/select/city/" + $(this).val());
+    });
+    $("#city").on('change', function () {
+        load_territory("#area", "/ajax/select/area/" + $("#region").val() + "/" + $(this).val());
+    });
     $("form").on('submit', function (event) {
+        event.preventDefault();
         var $name = $("#name");
         var $email = $("#email");
         var $region = $("#region");
         var $city = $("#city");
         var $area = $("#area");
         if ($name.val() !== '' && $email.val() !== '') {
-            if ($city.val() === null || $city.val() === undefined) {
-                event.preventDefault();
-                $("#city").load("/ajax/select/city/" + $region.val(), function () {
-                    $("#city").chosen();
-                });
-            } else if ($area.val() === null || $area.val() === undefined) {
-                event.preventDefault();
-                $("#area").load("/ajax/select/area/" + $region.val() + "/" + $city.val(), function () {
-                    $("#area").chosen();
-                });
-            } else {
-                event.preventDefault();
-                // Validation
+            // Validation
 
-                // Try email
-                $("#user-card").load("/ajax/user/" + $email.val(), function (response, status, xhr) {
-                    if (status !== 'error') {
-                        alert('User already exists');
-                        return;
-                    }
-                });
-                $.ajax({
-                    type: "POST",
-                    url: "/new-user",
-                    data: {
-                        "_token": $("input[name='_token']").val(),
-                        "name": $name.val(),
-                        "email": $email.val(),
-                        "region": $region.val(),
-                        "city": $city.val(),
-                        "area": $area.val()
-                    }
-                }).done(function () {
-
-                });
-            }
+            // Try email
+            $("#user-card").load("/ajax/user/" + $email.val(), function (response, status) {
+                if (status !== 'error') {
+                    return;
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/new-user",
+                data: {
+                    "_token": $("input[name='_token']").val(),
+                    "name": $name.val(),
+                    "email": $email.val(),
+                    "region": $region.val(),
+                    "city": $city.val(),
+                    "area": $area.val()
+                }
+            }).done(function () {
+            });
         } else {
-            event.preventDefault();
             alert("Please, fill out all the fields.");
         }
     });
