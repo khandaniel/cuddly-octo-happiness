@@ -57,37 +57,38 @@
         var $city = $("#city");
         var $area = $("#area");
         if ($name.val() !== '' && $email.val() !== '') {
-            // Validation
-            // Try email
-
-            $("#user-card").load("/ajax/user/" + $email.val(), function (response) {
-                if (response === '') {
-                    $.ajax({
-                        type: "POST",
-                        url: "/new-user",
-                        data: {
-                            "_token": $("input[name='_token']").val(),
-                            "name": $name.val(),
-                            "email": $email.val(),
-                            "region": $region.val(),
-                            "city": $city.val(),
-                            "area": $area.val()
-                        }
-                    }).done(function (response) {
-                        if (response === 'success') {
-                            $("#user-card")
-                                .append("<tr><td>Data saved!</td></tr>")
-                                .css({
-                                    "padding": "20px 30px",
-                                    "background-color": "#6bce6b"
-                                });
-                        }
-                    });
-                }
-            });
-
+            var emailRegExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+            if (emailRegExp.test($email.val())) {
+                $("#user-card").load("/ajax/user/" + $email.val(), function (response) {
+                    if (response === '') {
+                        $.ajax({
+                            type: "POST",
+                            url: "/new-user",
+                            data: {
+                                "_token": $("input[name='_token']").val(),
+                                "name": $name.val(),
+                                "email": $email.val(),
+                                "region": $region.val(),
+                                "city": $city.val(),
+                                "area": $area.val()
+                            }
+                        }).done(function (response) {
+                            if (response === 'success') {
+                                $("#user-card")
+                                    .append("<tr><td>Data saved!</td></tr>")
+                                    .css({
+                                        "padding": "20px 30px",
+                                        "background-color": "#6bce6b"
+                                    });
+                            }
+                        });
+                    }
+                });
+            } else {
+                alert("Heh, email is not email");
+            }
         } else {
-            alert("Please, fill out all the fields.");
+            alert("Please, fill all the fields.");
         }
     });
 </script>

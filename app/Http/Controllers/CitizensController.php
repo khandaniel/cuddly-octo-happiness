@@ -10,6 +10,13 @@ class CitizensController extends Controller
 {
     public function create(Request $request)
     {
+//        $request->validate([
+//            'name' => 'min:2',
+//            'email' => 'email|required',
+//            'region' => 'numeric|required',
+//            'city' => 'numeric|required',
+//            'area' => 'numeric|required',
+//        ]);
         $citizen = [];
         $citizen['name'] = $request->post('name');
         $citizen['email'] = $request->post('email');
