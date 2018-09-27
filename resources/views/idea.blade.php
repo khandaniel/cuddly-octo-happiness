@@ -58,26 +58,34 @@
         var $area = $("#area");
         if ($name.val() !== '' && $email.val() !== '') {
             // Validation
-
             // Try email
-            $("#user-card").load("/ajax/user/" + $email.val(), function (response, status) {
-                if (status !== 'error') {
-                    return;
+
+            $("#user-card").load("/ajax/user/" + $email.val(), function (response) {
+                if (response === '') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/new-user",
+                        data: {
+                            "_token": $("input[name='_token']").val(),
+                            "name": $name.val(),
+                            "email": $email.val(),
+                            "region": $region.val(),
+                            "city": $city.val(),
+                            "area": $area.val()
+                        }
+                    }).done(function (response) {
+                        if (response === 'success') {
+                            $("#user-card")
+                                .append("<tr><td>Data saved!</td></tr>")
+                                .css({
+                                    "padding": "20px 30px",
+                                    "background-color": "#6bce6b"
+                                });
+                        }
+                    });
                 }
             });
-            $.ajax({
-                type: "POST",
-                url: "/new-user",
-                data: {
-                    "_token": $("input[name='_token']").val(),
-                    "name": $name.val(),
-                    "email": $email.val(),
-                    "region": $region.val(),
-                    "city": $city.val(),
-                    "area": $area.val()
-                }
-            }).done(function () {
-            });
+
         } else {
             alert("Please, fill out all the fields.");
         }

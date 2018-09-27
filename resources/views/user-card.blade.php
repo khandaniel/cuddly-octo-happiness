@@ -1,4 +1,7 @@
 <tr>
+    <td colspan="2" style="padding: 20px 50px; background-color: pink; -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;">User already exists</td>
+</tr>
+<tr>
     <td>
         Name:
     </td>
@@ -35,6 +38,6 @@
         Area:
     </td>
     <td>
-        {{ $citizen->area()->ter_name }}
+        {{ $citizen->area()->ter_name ?? "Район не указан" }}
     </td>
 </tr>
